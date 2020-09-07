@@ -24,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.jms.Queue;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 
