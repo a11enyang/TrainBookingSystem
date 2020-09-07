@@ -40,10 +40,23 @@ public class SysLogAspect {
     public void logpoint(){}
 
     @AfterReturning(pointcut = "logpoint()",returning = "ret")
-    public void SysLog(JoinPoint joinPoint,Object ret){
-        //获取时间
+    public void saveLog(JoinPoint joinPoint,Object ret){
         long time=System.currentTimeMillis();
+        try {
+            time=System.currentTimeMillis()-time;
+        }
+        finally {
+            try {
+                SysLog(joinPoint,ret,time);
+            }catch (Exception e){
+                System.out.println("LogAspect 操作失败");
+                e.printStackTrace();
+            }
+        }
+    }
 
+
+    public void SysLog(JoinPoint joinPoint,Object ret,long time){
         //获取请求ip
         ServletRequestAttributes attributes=(ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request=attributes.getRequest();

@@ -68,6 +68,7 @@ public class UserOrderServiceImp implements UserOrderService {
         return uor.findUserOrderEntitiesByTripNumber(trip_number);
     }
 
+    @Operation(value = "删除订单",level = 5,operationType = OperationType.DELETE,operationUnit = OperationUnit.USER)
     @Override
     public void deleteUserOrderEntityById(int id) {
         uor.deleteUserOrderEntityById(id);
@@ -94,6 +95,7 @@ public class UserOrderServiceImp implements UserOrderService {
 
     }
 
+    @Operation(value = "查看订单",level = 3,operationUnit = OperationUnit.USER,operationType = OperationType.SELETE)
     @Override
     public List<Userorder_search> order_paystate(int id, String state) {
        List<Object[]> users= userOrderRepository.notpayorder(id,state);
