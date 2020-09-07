@@ -3,6 +3,7 @@ package com.bupt.trainbookingsystem.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bupt.trainbookingsystem.annotation.OperationLogDetail;
 import com.bupt.trainbookingsystem.entity.*;
 import com.bupt.trainbookingsystem.entity.custom.Pay_userinfo;
 import com.bupt.trainbookingsystem.entity.custom.Selectcontactor;
@@ -166,6 +167,7 @@ public class PCenterController {
     }
 
 
+    //删除联系人
     @GetMapping("/pcenter/{id}/delete")
     public String deletecontactor(@PathVariable int id, RedirectAttributes attributes){
         contactorsmethods.delecontactbyid(id);
@@ -185,7 +187,7 @@ public class PCenterController {
         return "redirect:/pcenter";
     }*/
 
-
+    //修改个人信息
     @PostMapping("/pcenter/editinfo")
     @ResponseBody
     public String editinfo(@RequestParam("editname")String name,@RequestParam("editphonenum") String phonenum,HttpSession session){
@@ -196,6 +198,7 @@ public class PCenterController {
            return "success";
     }
 
+    //修改联系人信息
     @PostMapping("/pcenter/altercontactor")
     @ResponseBody
     public String altercontator(@RequestParam("num") String num,@RequestParam("phonenum") String phonenum,RedirectAttributes attributes){

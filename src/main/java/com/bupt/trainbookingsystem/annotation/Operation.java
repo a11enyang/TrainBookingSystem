@@ -1,5 +1,8 @@
 package com.bupt.trainbookingsystem.annotation;
 
+import com.bupt.trainbookingsystem.enums.OperationType;
+import com.bupt.trainbookingsystem.enums.OperationUnit;
+
 import java.lang.annotation.*;
 
 /**
@@ -16,4 +19,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface Operation {
     String value() default "";
+
+    int level() default 0;
+
+    OperationType operationType() default OperationType.UNKNOWN;
+
+    OperationUnit operationUnit() default OperationUnit.UNKNOWN;
 }
