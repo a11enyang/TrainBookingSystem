@@ -385,11 +385,11 @@ public class PCenterController {
         List<Selectcontactor> selectcontactor= JSONObject.parseArray(str,Selectcontactor.class);
        // JSONArray jsonArray=new JSONArray();
         Map<String,Object> map=new HashMap<>();
-        map.put("start",start);
-        map.put("end",end);
-        Timestamp myTime = stationsService.getStationTimeByTripIdAndStation(start,Integer.parseInt(tripid));
-        String timeStr = String.valueOf(myTime).substring(0,9);
-        map.put("time",timeStr);
+//        map.put("start",start);
+//        map.put("end",end);
+//        Timestamp myTime = stationsService.getStationTimeByTripIdAndStation(start,Integer.parseInt(tripid));
+//        String timeStr = String.valueOf(myTime).substring(0,9);
+//        map.put("time",timeStr);
         OrdinaryUserEntity user=(OrdinaryUserEntity)session.getAttribute("user");
         TripEntity tripEntity=tripService.findTripEntityById(Integer.parseInt(tripid));
         String namelist="",seatlist="",myroute="",pricelist="",typelist="",seatNumList="";
