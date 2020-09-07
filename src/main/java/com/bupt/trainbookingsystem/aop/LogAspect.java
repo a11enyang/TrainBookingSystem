@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.bupt.trainbookingsystem.annotation.OperationLogDetail;
 import com.bupt.trainbookingsystem.entity.LoginfoEntity;
 import com.bupt.trainbookingsystem.entity.OrdinaryUserEntity;
+import com.bupt.trainbookingsystem.entity.UserOrderEntity;
 import com.bupt.trainbookingsystem.enums.OperationLog;
 import com.bupt.trainbookingsystem.service.LoginfoService;
 import com.bupt.trainbookingsystem.util.IPUtil;
@@ -36,7 +37,7 @@ public class LogAspect {
     private LoginfoService loginfoService;
 
     @Pointcut("@annotation(com.bupt.trainbookingsystem.annotation.OperationLogDetail)")
-    public void operationLog(){}
+    public void loginoperationLog(){}
 
     /**
      * 环绕增强，相当于MethodInterceptor
@@ -44,9 +45,9 @@ public class LogAspect {
 
 //    @Around("operationLog()")
 //    public Object doaround(ProceedingJoinPoint joinPoint) throws Throwable{
-    @AfterReturning(pointcut = "operationLog()",returning = "ret")
-    public void saveSysLog(JoinPoint joinPoint,Object ret){
-        Object res=null;
+    @AfterReturning(pointcut = "loginoperationLog()",returning = "ret")
+    public void saveLog(JoinPoint joinPoint,Object ret){
+        //Object res=null;
         long time=System.currentTimeMillis();
         try{
           //  res=joinPoint.proceed();
@@ -72,6 +73,8 @@ public class LogAspect {
 //            System.out.println("1232424"+user.getName());
 //        }
 
+
+        // System.out.println(b +""+(ret instanceof UserOrderEntity) );
         //获取请求ip
         ServletRequestAttributes attributes=(ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request=attributes.getRequest();
@@ -80,17 +83,17 @@ public class LogAspect {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         LoginfoEntity operationLog = new LoginfoEntity();
+
         if(ret==null){
-            operationLog.setReturnvalue("登录失败");
+            operationLog.setUsername((String)joinPoint.getArgs()[0]);
         }
         else {
-            operationLog.setReturnvalue("登录成功");
             //operationLog.setUserid(((OrdinaryUserEntity) ret).getId());
             operationLog.setUsername(((OrdinaryUserEntity) ret).getName());
         }
         operationLog.setRuntime(time);
         operationLog.setId(UUID.randomUUID().toString());
-        //operationLog.setArgs(JSON.toJSONString(joinPoint.getArgs()));
+        operationLog.setArgs(JSON.toJSONString(joinPoint.getArgs()));
         operationLog.setCreatetime(new Timestamp(System.currentTimeMillis()));
         operationLog.setMethod(signature.getDeclaringTypeName() + "." + signature.getName());
 
@@ -98,7 +101,7 @@ public class LogAspect {
         OperationLogDetail annotation = signature.getMethod().getAnnotation(OperationLogDetail.class);
         if (annotation != null) {
                 operationLog.setLevel(annotation.level());
-                operationLog.setDescribe(annotation.Detail());
+                operationLog.setDescribe(annotation.detail());
                 operationLog.setOperationtype(annotation.operationType().getValue());
                 operationLog.setOperationunit(annotation.operationUnit().getValue());
         }
@@ -152,10 +155,12 @@ public class LogAspect {
     /**
      * 后置异常通知
      */
-    @AfterThrowing("operationLog()")
+    @AfterThrowing("loginoperationLog()")
     public void throwss(JoinPoint jp){
         System.out.println("方法异常时执行.....");
     }
+
+
 
 
     /**

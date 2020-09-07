@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OperationLogDetail {
 
-    String Detail() default "";
+    String detail() default "";
 
     int level() default 0;
 

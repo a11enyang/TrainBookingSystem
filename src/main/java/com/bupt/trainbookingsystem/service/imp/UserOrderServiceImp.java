@@ -3,12 +3,15 @@
  内容：用户订单的Service层实现
  **/
 package com.bupt.trainbookingsystem.service.imp;
+import com.bupt.trainbookingsystem.annotation.Operation;
 import com.bupt.trainbookingsystem.dao.UserOrderRepository;
 
 import com.bupt.trainbookingsystem.entity.OrdinaryUserEntity;
 import com.bupt.trainbookingsystem.entity.UserOrderEntity;
 import com.bupt.trainbookingsystem.entity.custom.EntityUtils;
 import com.bupt.trainbookingsystem.entity.custom.Userorder_search;
+import com.bupt.trainbookingsystem.enums.OperationType;
+import com.bupt.trainbookingsystem.enums.OperationUnit;
 import com.bupt.trainbookingsystem.service.UserOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -27,6 +30,7 @@ public class UserOrderServiceImp implements UserOrderService {
 
     private final UserOrderRepository uor;
 
+    @Operation(value = "查看订单",level = 2,operationUnit = OperationUnit.USER,operationType = OperationType.SELETE)
     @Override
     public List<UserOrderEntity> orderstate_get(int id, String state) {
         return userOrderRepository.orderstate_get(id,state);
