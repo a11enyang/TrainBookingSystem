@@ -1,6 +1,7 @@
 package com.bupt.trainbookingsystem.controller;
 
-import com.alibaba.fastjson.JSONArray;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bupt.trainbookingsystem.entity.*;
 import com.bupt.trainbookingsystem.entity.custom.Pay_userinfo;
@@ -9,12 +10,14 @@ import com.bupt.trainbookingsystem.entity.custom.Userorder_search;
 import com.bupt.trainbookingsystem.entity.searchResult.SearchTrip;
 import com.bupt.trainbookingsystem.service.*;
 
-import org.hibernate.validator.constraints.SafeHtml;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -67,6 +70,12 @@ public class PCenterController {
 
     @Autowired
      FareService fareService;
+
+    @Autowired
+    private JmsMessagingTemplate jmsMessagingTemplate;
+
+    @Autowired
+    private Queue queue1;
 
     @RequestMapping("/pcenter")
     public String showpagestu(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "0") int page,
@@ -376,106 +385,12 @@ public class PCenterController {
 
     @PostMapping("buyticket/createorder")
     @ResponseBody
-    //@CacheEvict(value = "getTrips" ,key ="#result['start']+'-'+#result['end']+'-'+#result['time']")
-    public Map<String,Object>  createorder(@RequestBody Map<String,Object> data, HttpSession session){
-        String tripid=(String)data.get("tripid");
-        String start=(String)data.get("start");
-        String end=(String)data.get("end");
-        String str=(String)data.get("selectcontactors");
-        List<Selectcontactor> selectcontactor= JSONObject.parseArray(str,Selectcontactor.class);
-       // JSONArray jsonArray=new JSONArray();
-        Map<String,Object> map=new HashMap<>();
-//        map.put("start",start);
-//        map.put("end",end);
-//        Timestamp myTime = stationsService.getStationTimeByTripIdAndStation(start,Integer.parseInt(tripid));
-//        String timeStr = String.valueOf(myTime).substring(0,9);
-//        map.put("time",timeStr);
+    public void createorder(@RequestBody Map<String,Object> data, HttpSession session){
+        String json1 = JSON.toJSONString(data);
         OrdinaryUserEntity user=(OrdinaryUserEntity)session.getAttribute("user");
-        TripEntity tripEntity=tripService.findTripEntityById(Integer.parseInt(tripid));
-        String namelist="",seatlist="",myroute="",pricelist="",typelist="",seatNumList="";
-        BigDecimal price=new BigDecimal(0);
-        RoutelineEntity routelineEntity=routelineService.findRoutelineEntityByTripId(tripEntity.getId());
-        if(user!=null) {
-            UserOrderEntity userOrderEntity = new UserOrderEntity();
-            String rou=routelineEntity.getRouteLine();
-            String[] routeline=rou.split("-");
-            int startindex=getindex(routeline,start);
-            int endindex=getindex(routeline,end);
-
-            for(int j=startindex;j<=endindex;j++){
-                if(j==startindex){
-                    myroute=myroute.concat(routeline[j]);
-                }
-                else{
-                    myroute=myroute.concat("-").concat(routeline[j]);
-                }
-            }
-            Timestamp time=new Timestamp(new Date().getTime());
-            String [][]userSelect = new String[selectcontactor.size()][3];
-            for (int i = 0; i < selectcontactor.size(); i++) {
-                userSelect[i][0] = selectcontactor.get(i).getName();
-                userSelect[i][1]=selectcontactor.get(i).getType();
-            }
-            String[][] result = getSeatsInfo(tripEntity.getId(),userSelect,myroute);
-            for (int i = 0; i < selectcontactor.size(); i++) {
-                if (i == 0) {
-                    namelist = selectcontactor.get(i).getName();
-                    pricelist=""+selectcontactor.get(i).getPrice();
-                    price=selectcontactor.get(i).getPrice();
-                    typelist=selectcontactor.get(i).getType();
-                    seatlist =result[i][1];
-                    seatNumList = result[i][2];
-                    //seatlist="1-11";
-                } else {
-                    namelist = namelist + "," + selectcontactor.get(i).getName();
-                    pricelist=""+pricelist+","+selectcontactor.get(i).getPrice();
-                    price =price.add(selectcontactor.get(i).getPrice());
-                    typelist=typelist+","+selectcontactor.get(i).getType();
-                    //seatlist += ","+"1-11";
-                    seatlist+=","+result[i][1];
-                    seatNumList += "-"+result[i][2];
-                }
-            }
-            boolean isOk = true;
-            System.out.println("长度");
-            for(int i=0;i<result.length;++i){
-                System.out.println(result[i][1]);
-                if(result[i][1].equals("无座")){
-                    System.out.println("座位信息");
-                    isOk = false;
-                }
-            }
-            System.out.println(isOk);
-            if (isOk == true){
-                userOrderEntity.setUserOrderCondition("0");
-                userOrderEntity.setTripId(tripEntity.getId());
-                userOrderEntity.setPrice(price);
-                userOrderEntity.setOrdineryUserId(user.getId());
-                userOrderEntity.setNameList(namelist);
-                userOrderEntity.setSeatList(seatlist);
-                userOrderEntity.setTripTime(time);
-                userOrderEntity.setRoutLine(myroute);
-                userOrderEntity.setTripNumber(tripEntity.getTrainNumber());
-                userOrderEntity.setPricelist(pricelist);
-                userOrderEntity.setTypelist(typelist);
-                userOrderEntity.setSeatNumberList(seatNumList);
-                userOrderService.save(userOrderEntity);
-                map.put("status",1);
-            }
-            else{
-                map.put("status",0);
-            }
-        }
-        return  map;
-    }
-
-
-    private int getindex(String[] arr,String str){
-        for(int i=0;i<arr.length;i++){
-            if(arr[i].equals(str))
-                return i;
-        }
-        return -1;
+        String json2 = new JSONObject().toJSONString(user.getId());
+        String json3=json1.concat("+").concat(json2);
+        jmsMessagingTemplate.convertAndSend(queue1,json3);
     }
 
     @GetMapping("/api/gettrip")
@@ -628,126 +543,6 @@ public class PCenterController {
         map.put("searchTrips",searchTrips);
         map.put("sum",searchTrips.size());
         return map;
-    }
-    //获取座位信息
-    public   String[][] getSeatsInfo(int tripId,String[][] userSelect,String myRoute){
-        //获取座位数
-        String result[][] = new String[userSelect.length][3];
-//        System.out.println(trainService.findTrainEntityById(thisid));
-        String numberOfSeat = trainService.findSeatInfoById(tripService.findTripEntityById(tripId).getTrainId());
-        String[] NumberOfSeat = numberOfSeat.split("-");
-        //一等座座位数
-        int seatFirst = Integer.parseInt(NumberOfSeat[0]);
-        //二等座座位数
-        int seatSecond = Integer.parseInt(NumberOfSeat[1]);
-        //总座位数
-        int seatNumber = seatFirst + seatSecond;
-        //初始化座位
-        //获取区间之间的座位状况
-        String[] MyRoute = myRoute.split("-");
-        //获取当前座位
-        int peopleNum = userSelect.length;
-        int q = 0;
-        while (peopleNum!=0){
-            String name = userSelect[q][0];
-            String type = userSelect[q][1];
-            String seatInitial = "";
-            for(int m=0;m<seatNumber;++m){
-                seatInitial =seatInitial.concat("1");
-            }
-            System.out.println(seatInitial);
-            for(int j =0 ;j<MyRoute.length-1;++j){
-                String  last = "";
-                String startFirst = MyRoute[j];
-                String endNext = MyRoute[j+1];
-                //查找每个二维组的座位并并起来
-                String seatInfo = seatService.getSeatByStartEndTripId(startFirst,endNext,tripId);
-                //System.out.println(seatInfo);
-                for(int n=0;n<seatInfo.length();++n){
-                    int x = (Integer.valueOf(seatInitial.charAt(n)-48)&Integer.valueOf(seatInfo.charAt(n)-48));
-                    last = last.concat(String.valueOf(x));
-                    //System.out.println(last);
-                }
-                seatInitial = last;
-             //   System.out.println(seatInitial);
-            }
-            String seatInfoFirst = seatInitial.substring(0,seatFirst);
-            String seatInfoSecond = seatInitial.substring(seatFirst,seatFirst+seatSecond);
-            int p = 0;
-            int check = 1;
-            if (type.equals("1")){
-                while (check!=0){
-                    if(p==seatInfoFirst.length()){
-                        System.out.println("no seat now");
-                        result[q][0] = name;
-                        result[q][1] = "无座";
-                        break;
-                    }
-                    if (seatInfoFirst.charAt(p)=='0'){
-                        //当前余座
-                        System.out.println("当前座位");
-                        System.out.println(p);
-                        check = 0;
-                        result[q][0] = name;
-                        int x  = (p+1)/40;
-                        int y  = ((p+1)%40)/5;
-                        int z  = ((p+1)%40)%5;
-                        String s = "".concat(String.valueOf(x+1)).concat("-").concat(String.valueOf(y))
-                                .concat("-").concat(String.valueOf(z));
-                        result[q][1] = s;
-                        break;
-                    }
-                    p = p + 1;
-
-                }
-            }
-            else {
-                while (check!=0){
-                    if(p==seatInfoSecond.length()){
-                        System.out.println("no seat now");
-                        result[q][0] = name;
-                        result[q][1] = "无座";
-                        break;
-                    }
-                    if (seatInfoSecond.charAt(p)=='0'){
-                        //当前余座
-                        System.out.println("当前座位");
-                        System.out.println(p);
-                        p =  p+seatFirst-1;
-                        check = 0;
-                        result[q][0] = name;
-                        int x  = (p+1)/40;
-                        int y  = ((p+1)%40)/5;
-                        int z  = ((p+1)%40)%5;
-                        String s = "".concat(String.valueOf(x+1)).concat("-").concat(String.valueOf(y))
-                                .concat("-").concat(String.valueOf(z));
-                        result[q][1] = s;
-                    }
-                    p = p + 1;
-                    }
-            }
-            //更新余座
-            System.out.println("p");
-            System.out.println(p);
-            result[q][2] = String.valueOf(p);
-            if(result[q][1] != "无座"){
-                //更新座位表
-                for(int w =0 ;w<MyRoute.length-1;++w){
-                    String startFirst = MyRoute[w];
-                    String endNext = MyRoute[w+1];
-                    //查找每个二维组的座位并并起来
-                    String seatInfo = seatService.getSeatByStartEndTripId(startFirst,endNext,tripId);
-                    StringBuilder strBuilder = new StringBuilder(seatInfo);
-                    strBuilder.setCharAt(p,'1');
-                    System.out.println("座位"+strBuilder.toString());
-                    seatService.updateSeatInfoByTripId(strBuilder.toString(),startFirst,endNext,tripId);
-                }
-            }
-            q = q + 1;
-            peopleNum = peopleNum -1;
-        }
-
-        return result;
     }
     //获取时间差
     public static String getDistanceTime(long time1, long time2) {

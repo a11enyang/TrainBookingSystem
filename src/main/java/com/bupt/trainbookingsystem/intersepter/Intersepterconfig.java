@@ -5,13 +5,14 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-/*@Configuration
+@Configuration
 public class Intersepterconfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new Intersepter())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login")
+                .excludePathPatterns("/register")
                 .excludePathPatterns("/admin/login")
                 .excludePathPatterns("/ticketManager/login")
                 .excludePathPatterns("/ticketLogin")
@@ -23,4 +24,4 @@ public class Intersepterconfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/**")
                 .excludePathPatterns("/static/**");
     }
-}*/
+}
