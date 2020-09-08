@@ -184,6 +184,7 @@
                                         <!-- Default panel contents -->
                                         <div class="panel-heading" style="height: 60px;">
                                             <div style="margin-top: 10px; width: 100px; float: left;">列车列表</div>
+                                            <button class="btn btn-warning"@click="cleanRedis()" type="submit" style="float: right">刷新列表</button>
                                             <button type="button" class="btn btn-success" data-toggle="modal"
                                             data-target="#moretrain"
                                                 style="float: right;">新增列车</button>
@@ -452,7 +453,7 @@
                                             </form>
                                                 <div class="col-md-2">
                                                     <br>
-                                                    <button class="btn btn-success"@click="myflush()" type="submit" style="top:10px">刷新列表</button>
+                                                    <button class="btn btn-success"@click="myflush()" type="submit" >刷新列表</button>
                                                 </div>
 
                                         </div>
@@ -935,6 +936,15 @@
                         }
                     )
                 },
+                cleanRedis:function(){
+                    axios.post("http://localhost:8080/api/ticketCenter/cleanRedis").then(
+                        response =>{
+                            this.get();
+                            alert("已清除缓存");
+                        }
+                    )
+
+                },
                 getNew:function(){          axios
                     .get("http://localhost:8080/api/ticketCenter/newTrains")
                     .then(
@@ -956,8 +966,9 @@
                         this.trains.push(savedTrain.data);
                         this.new_type = '';
                         this.new_seatInformation= '';
+                        this.getNew();
                     });
-                    this.getNew();
+
                     $("#moretrain").modal('hide');
                 },
                 seeTrain:function(train){
@@ -972,7 +983,7 @@
                     param.append("id",this.edit_id);
                     axios.post("http://localhost:8080/api/ticketCenter/editTrain",param)
                         .then(savedTrain => {
-                            this.getNew();
+                           this.getNew();
                         });
                     $("#edittrain").modal('hide');
                 },
@@ -999,8 +1010,9 @@
                             param.append("train_id",this.train_id);
                             axios.post("http://localhost:8080/api/ticketCenter/addTrip",param)
                                 .then(savedTrip => {
+                                    this.getNew();
                                 });
-                            this.getNew();
+
                             $("#moretrip").modal('hide');
                         }
                        else{
