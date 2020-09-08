@@ -17,8 +17,7 @@ public class OrdinaryUserServiceImp implements OrdinaryUserService {
     @Autowired
     OrdinaryUserRepository ordinaryUserRepository;
 
-    @OperationLogDetail(Detail = "通过账号登录",level = 3,operationType = OperationType.SELETE,operationUnit = OperationUnit.USER)
-    //@Operation(value = "用户[{{name}}]登录")
+    @OperationLogDetail(detail = "通过账号登录",level = 3,operationType = OperationType.SELETE,operationUnit = OperationUnit.USER)
     @Override
     public OrdinaryUserEntity checkuser(String name, String password) {
         OrdinaryUserEntity ordinaryuser=ordinaryUserRepository.TrygetUser(name,password);
@@ -58,11 +57,12 @@ public class OrdinaryUserServiceImp implements OrdinaryUserService {
     }
 
     @Override
-
     public void createOrdinaryUserEntity(OrdinaryUserEntity userEntity){
         ordinaryUserRepository.save(userEntity);
     }
 
+    @Operation(value ="修改个人信息" ,level = 4,operationType = OperationType.UPDATE,operationUnit = OperationUnit.USER)
+    @Override
     public void edituinfo(String phonenum, String name) {
         ordinaryUserRepository.updatebynames(phonenum,name);
     }

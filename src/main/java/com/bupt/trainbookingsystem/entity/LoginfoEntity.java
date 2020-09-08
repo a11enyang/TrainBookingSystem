@@ -21,6 +21,7 @@ public class LoginfoEntity {
     private String operationtype;
     private Long runtime;
     private String clientip;
+    private String args;
 
     @Id
     @Column(name = "id")
@@ -40,6 +41,18 @@ public class LoginfoEntity {
 
     public void setCreatetime(Timestamp createtime) {
         this.createtime = createtime;
+    }
+
+
+
+    @Basic
+    @Column(name = "args")
+    public String getArgs() {
+        return args;
+    }
+
+    public void setArgs(String args) {
+        this.args = args;
     }
 
     @Basic

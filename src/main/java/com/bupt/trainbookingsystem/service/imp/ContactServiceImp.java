@@ -1,7 +1,10 @@
 package com.bupt.trainbookingsystem.service.imp;
 
+import com.bupt.trainbookingsystem.annotation.Operation;
 import com.bupt.trainbookingsystem.dao.ContactRespository;
 import com.bupt.trainbookingsystem.entity.ContactEntity;
+import com.bupt.trainbookingsystem.enums.OperationType;
+import com.bupt.trainbookingsystem.enums.OperationUnit;
 import com.bupt.trainbookingsystem.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,21 +30,25 @@ public class ContactServiceImp implements ContactService {
         return contactRespository.findContactEntityByName(name);
     }
 
+    @Operation(value = "删除联系人",level = 2,operationUnit = OperationUnit.USER,operationType = OperationType.DELETE)
     @Override
     public void delecontactbyid(int id) {
         contactRespository.deleteById(id);
     }
 
+    @Operation(value = "增加联系人",level = 2,operationUnit = OperationUnit.USER,operationType = OperationType.INSERT)
     @Override
     public void addcontatcor(ContactEntity c) {
         contactRespository.save(c);
     }
 
+    @Operation(value = "修改联系人信息",level = 2,operationType = OperationType.UPDATE,operationUnit = OperationUnit.USER)
     @Override
     public void altercontactor(String phonenum, int id) {
         contactRespository.updatecontactor(phonenum,id);
     }
 
+    @Operation(value = "查看联系人",level = 1,operationType = OperationType.SELETE,operationUnit = OperationUnit.USER)
     @Override
     public List<ContactEntity> findcontactors(int id) {
         List<ContactEntity> contactEntities=contactRespository.findContactEntitiesByUserId(id);

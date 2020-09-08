@@ -60,6 +60,7 @@ public class StationsServiceImp implements StationsService {
     }
 
     @Override
+    @CachePut(value="Station1",key = "#start+'-'+#id")
     public Timestamp getStationTimeByTripIdAndStation(String start, int tripId) {
         return stationsRepository.getStationTimeByTripIdAndStation(start, tripId);
     }
