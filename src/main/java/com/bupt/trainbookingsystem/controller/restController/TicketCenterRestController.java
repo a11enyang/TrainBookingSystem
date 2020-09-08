@@ -152,7 +152,6 @@ public class TicketCenterRestController {
         tripEntity.setDepartureTime(Timestamp.valueOf(de_time));
         tripEntity.setRemainseatInfo(trainService.findTrainEntityById(train_id).getSeatInfo());
         tripService.save(tripEntity);
-
         return tripEntity;
 
     }
