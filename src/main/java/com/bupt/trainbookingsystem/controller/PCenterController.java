@@ -78,21 +78,45 @@ public class PCenterController {
     private Queue queue1;
 
     @RequestMapping("/pcenter")
-    public String showpagestu(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+    public String showpagestu(HttpSession session, Model model, 
+                              @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "page1", defaultValue = "0")int page1,
-                              @RequestParam(value = "page3", defaultValue = "0")int page2,
-                              @RequestParam(value = "page4",defaultValue = "0")int page4){
+                              @RequestParam(value = "page2", defaultValue = "0")int page2,
+                              @RequestParam(value = "page3",defaultValue = "0")int page3,
+                              @RequestParam(value = "page4",defaultValue ="0")int page4){
         OrdinaryUserEntity user=(OrdinaryUserEntity) session.getAttribute("user");
         Timestamp nowtime=new Timestamp(System.currentTimeMillis());
         if(user!=null){
             Sort sort = Sort.by(Sort.Direction.DESC,"id");
-            Pageable pageable= PageRequest.of(page,3,sort);
+            Pageable pageable= PageRequest.of(page,6,sort);
             Page<ContactEntity> contactuser=contactorsmethods.findallcontator(user.getId(),pageable);
             List<Userorder_search> not_payorder=new ArrayList<>();
             List<Userorder_search> not_goorder=new ArrayList<>();
             List<Userorder_search> complete_order=new ArrayList<>();
+            List<Userorder_search> disabled_order=new ArrayList<>();
 
-            Pageable pageable3=PageRequest.of(page4,3,sort);
+            Pageable pageable4=PageRequest.of(page4,6,sort);
+            List<UserOrderEntity> orderdisabled=userOrderService.orderstate_get(user.getId(),"-1");
+            for(int i=0;i<orderdisabled.size();i++){
+                UserOrderEntity pay4=orderdisabled.get(i);
+                String[] route=pay4.getRoutLine().split("-");
+                String start=route[0];
+                String end=route[route.length-1];
+                Timestamp starttime=stationsService.getStationTimeByTripIdAndStation(start,pay4.getTripId());
+                if(starttime.before(nowtime)){
+                    userOrderService.updateUserOrderEntityById("2",pay4.getId());
+                }
+                else {
+                    Timestamp endtime = stationsService.getStationTimeByTripIdAndStation(end, pay4.getTripId());
+                    Userorder_search pay_4 = new Userorder_search(pay4.getId(), pay4.getTripNumber(), pay4.getNameList(), pay4.getSeatList()
+                            , pay4.getPrice(), start, end, starttime, endtime);
+                    not_payorder.add(pay_4);
+                }
+            }
+            Page<Userorder_search> disabledorders=listConvertToPage(not_payorder,pageable4);
+
+
+            Pageable pageable3=PageRequest.of(page3,6,sort);
             List<UserOrderEntity> ordernotpay=userOrderService.orderstate_get(user.getId(),"0");
             for(int i=0;i<ordernotpay.size();i++){
                 UserOrderEntity pay0=ordernotpay.get(i);
@@ -112,7 +136,7 @@ public class PCenterController {
             }
             Page<Userorder_search> notpayorders=listConvertToPage(not_payorder,pageable3);
 
-            Pageable pageable1=PageRequest.of(page1,3,sort);
+            Pageable pageable1=PageRequest.of(page1,6,sort);
             List<UserOrderEntity> ordernotgo=userOrderService.orderstate_get(user.getId(),"1");
             for(int i=0;i<ordernotgo.size();i++){
                 UserOrderEntity pay1=ordernotgo.get(i);
@@ -134,7 +158,7 @@ public class PCenterController {
 
 
 
-            Pageable pageable2=PageRequest.of(page2,3,sort);
+            Pageable pageable2=PageRequest.of(page2,6,sort);
             List<UserOrderEntity> ordercomplete=userOrderService.orderstate_get(user.getId(),"2");
             for(int i=0;i<ordercomplete.size();i++){
                 UserOrderEntity pay2=ordercomplete.get(i);
@@ -153,6 +177,7 @@ public class PCenterController {
             model.addAttribute("notpaypage",notpayorders);
             model.addAttribute("notgopage",notgoorders);
             model.addAttribute("completepage",completeorders);
+            model.addAttribute("disbaledpage",disabledorders);
             model.addAttribute("names", user.getName());
             model.addAttribute("realname",user.getRealname());
             model.addAttribute("types", user.getType());

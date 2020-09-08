@@ -244,23 +244,24 @@ public class OrderConsumer {
             System.out.println(isOk);
             if (isOk == true){
                 userOrderEntity.setUserOrderCondition("0");
-                userOrderEntity.setTripId(tripEntity.getId());
-                userOrderEntity.setPrice(price);
-                userOrderEntity.setOrdineryUserId(user.getId());
-                userOrderEntity.setNameList(namelist);
-                userOrderEntity.setSeatList(seatlist);
-                userOrderEntity.setTripTime(time);
-                userOrderEntity.setRoutLine(myroute);
-                userOrderEntity.setTripNumber(tripEntity.getTrainNumber());
-                userOrderEntity.setPricelist(pricelist);
-                userOrderEntity.setTypelist(typelist);
-                userOrderEntity.setSeatNumberList(seatNumList);
-                userOrderService.save(userOrderEntity);
                 map.put("status",1);
             }
             else{
                 map.put("status",0);
+                userOrderEntity.setUserOrderCondition("-1");
             }
+            userOrderEntity.setTripId(tripEntity.getId());
+            userOrderEntity.setPrice(price);
+            userOrderEntity.setOrdineryUserId(user.getId());
+            userOrderEntity.setNameList(namelist);
+            userOrderEntity.setSeatList(seatlist);
+            userOrderEntity.setTripTime(time);
+            userOrderEntity.setRoutLine(myroute);
+            userOrderEntity.setTripNumber(tripEntity.getTrainNumber());
+            userOrderEntity.setPricelist(pricelist);
+            userOrderEntity.setTypelist(typelist);
+            userOrderEntity.setSeatNumberList(seatNumList);
+            userOrderService.save(userOrderEntity);
         }
         return  map;
     }

@@ -75,6 +75,7 @@
                             <li class="active"><a href="#tab11" data-toggle="tab">未支付订单</a></li>
                             <li><a href="#tab12" data-toggle="tab">未出行订单</a></li>
                             <li><a href="#tab13" data-toggle="tab">历史订单</a></li>
+                            <li><a href="#tab14" data-toggle="tab">无效订单</a></li>
                         </ul>
                         <div class="tab-content tab_seccont">
 <!--                            &lt;!&ndash; 第一个tab &ndash;&gt;-->
@@ -110,8 +111,8 @@
                                     <tr>
                                         <th colspan="6" th:if="${notpaypage.totalPages}>1">
                                             <div class="ui mini pagination menu" >
-                                                <a th:href="@{/pcenter(page4=${notpaypage.number}-1)}" class=" item" th:unless="${notpaypage.first}">上一页</a>
-                                                <a th:href="@{/pcenter(page4=${notpaypage.number}+1)}" class="item" th:unless="${notpaypage.last}">下一页</a>
+                                                <a th:href="@{/pcenter(page3=${notpaypage.number}-1)}" class=" item" th:unless="${notpaypage.first}">上一页</a>
+                                                <a th:href="@{/pcenter(page3=${notpaypage.number}+1)}" class="item" th:unless="${notpaypage.last}">下一页</a>
                                             </div>
                                             <!--                                        <a href="#" th:href="@{/pcenter/contact/input}"  class="ui mini right floated teal basic button">新增</a>-->
                                         </th>
@@ -196,8 +197,45 @@
                                     <tr>
                                         <th colspan="6" th:if="${completepage.totalPages}>1">
                                             <div class="ui mini pagination menu" >
-                                                <a th:href="@{/pcenter(page3=${completepage.number}-1)}" class=" item" th:unless="${completepage.first}">上一页</a>
-                                                <a th:href="@{/pcenter(page3=${completepage.number}+1)}" class="item" th:unless="${completepage.last}">下一页</a>
+                                                <a th:href="@{/pcenter(page2=${completepage.number}-1)}" class=" item" th:unless="${completepage.first}">上一页</a>
+                                                <a th:href="@{/pcenter(page2=${completepage.number}+1)}" class="item" th:unless="${completepage.last}">下一页</a>
+                                            </div>
+                                            <!--                                        <a href="#" th:href="@{/pcenter/contact/input}"  class="ui mini right floated teal basic button">新增</a>-->
+                                        </th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!--                            &lt;!&ndash; 第四个tab &ndash;&gt;-->
+                            <div class="tab-pane  tab_secmenu" id="tab14">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>车次</th>
+                                        <th>乘客姓名</th>
+                                        <th>座位号</th>
+                                        <th>车票价格</th>
+                                        <th>起点/目的车站</th>
+                                        <th>入站/抵达时间</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="type4 : ${disbaledpage.content}">
+                                        <td th:text="${type4.trainnum}"></td>
+                                        <td th:text="${type4.namelist}"></td>
+                                        <td th:text="${type4.seatlist}"></td>
+                                        <td th:text="${type4.price}"></td>
+                                        <td th:text="${type4.startstation}+'/'+${type4.endstation}"></td>
+                                        <td><b th:text="${type4.starttime}"></b>
+                                            <br><b th:text="${type4.endtime}"></b></td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th colspan="6" th:if="${disbaledpage.totalPages}>1">
+                                            <div class="ui mini pagination menu" >
+                                                <a th:href="@{/pcenter(page4=${disbaledpage.number}-1)}" class=" item" th:unless="${disbaledpage.first}">上一页</a>
+                                                <a th:href="@{/pcenter(page4=${disbaledpage.number}+1)}" class="item" th:unless="${disbaledpage.last}">下一页</a>
                                             </div>
                                             <!--                                        <a href="#" th:href="@{/pcenter/contact/input}"  class="ui mini right floated teal basic button">新增</a>-->
                                         </th>
