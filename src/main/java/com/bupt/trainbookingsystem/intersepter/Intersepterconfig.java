@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
 @Configuration
 public class Intersepterconfig implements WebMvcConfigurer {
     @Override
@@ -22,6 +21,8 @@ public class Intersepterconfig implements WebMvcConfigurer {
                 .excludePathPatterns("/search")
                 .excludePathPatterns("/pay/{id}")
                 .excludePathPatterns("/api/**")
+                .excludePathPatterns("/swagger-ui.html")
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**")
                 .excludePathPatterns("/static/**");
     }
 }

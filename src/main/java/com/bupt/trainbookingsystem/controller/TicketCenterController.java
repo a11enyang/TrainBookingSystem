@@ -1,4 +1,6 @@
 package com.bupt.trainbookingsystem.controller;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.bupt.trainbookingsystem.entity.TicketManagerEntity;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -33,15 +36,18 @@ import java.util.Map;
  * 内容：售票端管理员的登录和退出登录
  */
 @Controller
+@Api(tags = "票务端登陆验证",description = "票务端登陆验证API")
 public class TicketCenterController {
     public TicketManagerEntity ticketManagerEntity = new TicketManagerEntity();
     @Autowired
     public TicketManagerService ticketManagerService;
+    @ApiIgnore
     @RequestMapping("ticketLogin")
     public String ticketLogin(){
         return "ticketlogin";
     }
     //检查管理员登录
+    @ApiOperation("票务管理员登陆验证")
     @RequestMapping("ticketManager/login")
     public String checkManager(@RequestParam("name") String name,
                                @RequestParam("pw") String pw,
@@ -67,6 +73,7 @@ public class TicketCenterController {
             return "redirect:/ticketLogin";
         }
     }
+    @ApiIgnore
     @RequestMapping("/ticketLoginBack")
     public String backLogin(){
         return "redirect:/ticketLogin";

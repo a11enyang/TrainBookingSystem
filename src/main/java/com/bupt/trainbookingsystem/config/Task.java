@@ -32,9 +32,9 @@ public class Task {
         }
         //拼接cmd命令
         //linux 下备份
-        Process exec = Runtime.getRuntime().exec("/bin/sh -c mysqldump -h" + host + " -P" + port + " -u " + username + " -p" + password + " " + databasename + " > " + datafile);
+    //    Process exec = Runtime.getRuntime().exec("/bin/sh -c mysqldump -h" + host + " -P" + port + " -u " + username + " -p" + password + " " + databasename + " > " + datafile);
         //windows 下备份
-        //Process exec = Runtime.getRuntime().exec("cmd /c mysqldump -h" + host + " -P" + port + " -u " + username + " -p" + password + " " + databasename + " > " + datafile);
+        Process exec = Runtime.getRuntime().exec("cmd /c mysqldump -h" + host + " -P" + port + " -u " + username + " -p" + password + " " + databasename + " > " + datafile);
         if (exec.waitFor() == 0) {
             System.out.println("数据库备份成功,备份路径为：" + datafile);
         }

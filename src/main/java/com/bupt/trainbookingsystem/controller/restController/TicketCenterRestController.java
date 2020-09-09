@@ -5,14 +5,17 @@
 package com.bupt.trainbookingsystem.controller.restController;
 import com.bupt.trainbookingsystem.entity.*;
 import com.bupt.trainbookingsystem.service.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
-
+@Api(tags = "票务端相关接口",description = "票务端相关API")
 @RestController
 @RequestMapping("/api/ticketCenter")
 @CrossOrigin
@@ -39,6 +42,7 @@ public class TicketCenterRestController {
         this.fareService = fareService;
         this.seatService = seatService;
     }
+    @ApiIgnore
     @RequestMapping("cleanRedis")
     public Map<String, Object> cleanRedis() {
         Map<String, Object> map = new HashMap<>();
@@ -62,6 +66,7 @@ public class TicketCenterRestController {
         }
     }
     //更新票务管理员
+    @ApiOperation("更新票务管理员")
     @PostMapping("/ticketManagerUpdate")
     public TicketManagerEntity ticketManagerUpdate (@RequestParam(value = "name",required = false)String name, @RequestParam(value = "password",required = false)
 
@@ -71,46 +76,54 @@ public class TicketCenterRestController {
     }
 
     //获取列车
+    @ApiOperation("查看车次")
     @GetMapping("/trains")
     public List<TrainEntity> trains() {
         return trainService.findAll();
     }
 
     //获取列车 非缓存
+    @ApiOperation("非缓存查看车次")
     @GetMapping("/newTrains")
     public List<TrainEntity> newTrains() {
         return trainService.findAllNew();
     }
 
     //获取订单
+    @ApiOperation("查看订单")
    @GetMapping("/userOrders")
     public List<UserOrderEntity> userOrders(){
         return  userOrderService.findAll();
     }
 
     //获取订单 非缓存
+    @ApiOperation("查看订单非缓存")
     @GetMapping("/userOrdersNew")
     public List<UserOrderEntity> userOrdersNew(){
         return  userOrderService.findAllNew();
     }
     //查找对应的订单
+    @ApiOperation("查找订单")
     @PostMapping("/findOrderByOrderId")
     public UserOrderEntity findOrderByOrderId(@RequestParam(value = "id",required = false) String id){
         UserOrderEntity u = userOrderService.findUserOrderEntityById(Integer.parseInt(id));
         return  u;
     }
     //修改订单
+    @ApiOperation("编辑订单")
     @PostMapping("/editOrder")
     public UserOrderEntity editOrder(@RequestParam(value = "condition",required = false)String condition,@RequestParam("id") int id){
         System.out.println(condition);
         return userOrderService.updateUserOrderEntityById1(condition, id);
     }
     //删除订单
+    @ApiOperation("删除订单")
     @DeleteMapping("/deleteOrder/{id}")
     public void deleteOrder(@PathVariable int id) {
         userOrderService.deleteUserOrderEntityById(id);
     }
     //增加列车
+    @ApiOperation("新增列车")
     @PostMapping("/addTrain")
     public TrainEntity addTrain(@RequestParam(value = "trainType",required = false)String trainType,
                                 @RequestParam(value = "seatInfo",required = false)String seatInfo){
@@ -120,6 +133,7 @@ public class TicketCenterRestController {
        return trainService.save(trainEntity);
     }
     //修改列车信息
+    @ApiOperation("修改列车信息")
     @PostMapping("/editTrain")
     public TrainEntity editTrain(@RequestParam(value = "trainType",required = false)String trainType,
                                  @RequestParam(value = "seatInfo",required = false)String seatInfo,
@@ -128,12 +142,14 @@ public class TicketCenterRestController {
                         return trainService.findTrainEntityById(id);
     }
     //删除列车
+    @ApiOperation("删除列车")
     @DeleteMapping("/deleteTrain/{id}")
     public void deleteTrain(@PathVariable int id) {
         trainService.deleteTrainEntityById(id);
     }
 
     //增加车次
+    @ApiOperation("增加车次")
     @PostMapping("/addTrip")
     public TripEntity addTrip(@RequestParam(value = "de_time",required = false)String de_time,
                               @RequestParam(value = "start_station",required = false)String start_station,
@@ -157,15 +173,18 @@ public class TicketCenterRestController {
     }
 
     //查看车次
+    @ApiOperation("新增车次")
     @GetMapping("/trips")
     public List<TripEntity> seeTrips(){
         return  tripService.findAll();
     }
+    @ApiOperation("新增车次非缓存")
     @GetMapping("/newTrips")
     public List<TripEntity> seeNewTrips(){
         return  tripService.findAllNew();
     }
     //编辑车次
+    @ApiOperation("编辑车次")
     @PostMapping("/editTrip")
     public TrainEntity editTrip(@RequestParam(value = "edit_number",required = false)String edit_number,
                                  @RequestParam(value = "edit_time",required = false)String edit_time,
@@ -176,16 +195,19 @@ public class TicketCenterRestController {
         return trainService.findTrainEntityById(id);
     }
     //编号搜索车次
+    @ApiOperation("按照编号搜索车次")
     @PostMapping("/searchTripsByNumber")
             List<TripEntity> searchTripsByNumber(@RequestParam(value = "number",required = false)String number){
         return  tripService.findTripEntitiesByTrainNumberContaining(number);
     }
     //状态搜索车次
+    @ApiOperation("按照状态搜索车次")
     @PostMapping("/searchTripsByStatus")
     List<TripEntity> searchTripsByStatus(@RequestParam(value = "status",required = false)String status){
         return tripService.findTripEntitiesByTripStatus(Byte.valueOf(status));
     }
     //查看路线
+    @ApiOperation("查看路线")
     @GetMapping("/seeRoute/{id}")
     public RoutelineEntity seeRoute(@PathVariable int id) {
         RoutelineEntity routelineEntity = new  RoutelineEntity();
@@ -193,24 +215,28 @@ public class TicketCenterRestController {
         return routelineEntity;
     }
     //查看站点
+    @ApiOperation("查看站点")
     @GetMapping("/seeStations/{id}")
     @ResponseBody
     public List<StationsEntity> seeStations(@PathVariable int id) {
         return stationsService.findStationsEntitiesByTripId(id);
     }
     //查看站点非缓存
+    @ApiOperation("查看站点非缓存")
     @GetMapping("/seeNewStations/{id}")
     @ResponseBody
     public List<StationsEntity> seeNewStations(@PathVariable int id) {
         return stationsService.newFindStationsEntitiesByTripId(id);
     }
     //查看票价
+    @ApiOperation("查看票价")
     @GetMapping("/seeFares/{id}")
     @ResponseBody
     public List<FareEntity> seeFares(@PathVariable int id) {
         return fareService.findFareEntitiesByTripId(id);
     }
     //编辑站点
+    @ApiOperation("编辑站点")
     @PostMapping("/editStation")
     public  void editStation(@RequestParam(value = "time",required = false)String time,
                                        @RequestParam(value = "id",required = false)int id){
@@ -219,6 +245,7 @@ public class TicketCenterRestController {
                         System.out.println("ok");
     }
     //编辑票价
+    @ApiOperation("编辑票价")
     @PostMapping("/editFare")
     public  void editFare(@RequestParam(value = "price",required = false)String price,
                              @RequestParam(value = "id",required = false)int id){
@@ -227,6 +254,7 @@ public class TicketCenterRestController {
         System.out.println("ok");
     }
     //增加站点
+    @ApiOperation("增加站点")
     @PostMapping("/addStation")
     public void addStation(@RequestParam(value = "name",required = false)String name,
                               @RequestParam(value = "time",required = false)String time,
@@ -240,6 +268,7 @@ public class TicketCenterRestController {
         stationsService.save(stationsEntity);
     }
     //增加费用
+    @ApiOperation("增加票价")
     @PostMapping("/addFare")
     public void addFare(@RequestParam(value = "start",required = false)String start,
                            @RequestParam(value = "end",required = false)String end,
@@ -256,16 +285,19 @@ public class TicketCenterRestController {
         fareService.save(fareEntity);
     }
     //删除站点
+    @ApiOperation("删除站点")
     @DeleteMapping("/deleteStation/{id}")
     public void deleteStation(@PathVariable int id) {
         stationsService.deleteStationsEntityById(id);
     }
     //删除票价
+    @ApiOperation("删除票价")
     @DeleteMapping("/deleteFare/{id}")
     public void deleteFare(@PathVariable int id) {
           fareService.deleteFareEntityById(id);
     }
     //新增、编辑路线
+    @ApiOperation("新增/编辑路线-》生成新站点+票价")
     @PostMapping("/editRoute")
      public  RoutelineEntity editRoute(@RequestParam(value = "route",required = false)String route,
                               @RequestParam(value = "id",required = false)int id){
