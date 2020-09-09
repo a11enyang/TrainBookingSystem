@@ -54,10 +54,8 @@ public class OrderConsumer {
         //总座位数
         int seatNumber = seatFirst + seatSecond;
         //初始化座位
-
         //获取区间之间的座位状况
         String[] MyRoute = myRoute.split("-");
-
         //获取当前座位
         int peopleNum = userSelect.length;
         int q = 0;
@@ -68,7 +66,7 @@ public class OrderConsumer {
             for(int m=0;m<seatNumber;++m){
                 seatInitial =seatInitial.concat("1");
             }
-            System.out.println(seatInitial);
+            //System.out.println(seatInitial);
             for(int j =0 ;j<MyRoute.length-1;++j){
                 String  last = "";
                 String startFirst = MyRoute[j];

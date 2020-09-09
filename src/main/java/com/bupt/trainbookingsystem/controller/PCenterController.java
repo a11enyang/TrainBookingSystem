@@ -80,7 +80,7 @@ public class PCenterController {
     private Queue queue1;
 
     @RequestMapping("/pcenter")
-    public String showpagestu(HttpSession session, Model model, 
+    public String showpagestu(HttpSession session, Model model,
                               @RequestParam(value = "page", defaultValue = "0") int page,
                               @RequestParam(value = "page1", defaultValue = "0")int page1,
                               @RequestParam(value = "page2", defaultValue = "0")int page2,
@@ -540,11 +540,11 @@ public class PCenterController {
                 String endNext = MyRoute[j+1];
                 //查找每个二维组的座位并并起来
                 String seatInfo = seatService.getSeatByStartEndTripId(startFirst,endNext,tripId);
-                System.out.println(seatInfo);
+            //    System.out.println(seatInfo);
                 for(int n=0;n<seatInfo.length();++n){
                     int x = (Integer.valueOf(seatInitial.charAt(n)-48)&Integer.valueOf(seatInfo.charAt(n)-48));
                     last = last.concat(String.valueOf(x));
-                    System.out.println(last);
+                  //  System.out.println(last);
                 }
                 seatInitial = last;
                 System.out.println(seatInitial);

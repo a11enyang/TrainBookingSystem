@@ -39,7 +39,7 @@ public class UserOrderServiceImp implements UserOrderService {
     public UserOrderServiceImp(UserOrderRepository uor) {
         this.uor = uor;
     }
-
+    @Operation(value = "生成订单",level = 2,operationUnit = OperationUnit.USER,operationType = OperationType.INSERT)
     @Override
     public void save(UserOrderEntity u) {
         uor.save(u);

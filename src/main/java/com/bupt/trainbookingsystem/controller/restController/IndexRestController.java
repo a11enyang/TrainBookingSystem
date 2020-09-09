@@ -68,7 +68,7 @@ public class IndexRestController {
     public Map<String,Object> getTrips(@RequestParam(value = "start",required = false)String start,
                                      @RequestParam(value = "end",required = false)String end,
                                      @RequestParam(value = "time",required = false)String time){
-            System.out.println(time);
+            //System.out.println(time);
             List<TripEntity> routeTrips = new ArrayList<>();
             //路线匹配
             List<RoutelineEntity> routeLists = routelineService.findRouteEntitiesByStations(start,end);
@@ -138,23 +138,33 @@ public class IndexRestController {
                 for(int m=0;m<seatNumber;++m){
                     seatInitial =seatInitial.concat("1");
                 }
-                System.out.println(seatInitial);
+             //   System.out.println(seatInitial);
                 for(int j =0 ;j<MyRoute.length-1;++j){
                     String  last = "";
                     String startFirst = MyRoute[j];
                     String endNext = MyRoute[j+1];
                     //查找每个二维组的座位并并起来
                     String seatInfo = seatService.getSeatByStartEndTripId(startFirst,endNext,tripId);
+                //    System.out.println(seatInfo);
                     for(int n=0;n<seatInfo.length();++n){
-                        int x = (Integer.valueOf(seatInitial.charAt(n)-48)&Integer.valueOf(seatInfo.charAt(n)-48));
-                        last = last.concat(String.valueOf(x));
+                        if(j==0){
+                            int x = (Integer.valueOf(seatInitial.charAt(n)-48)&Integer.valueOf(seatInfo.charAt(n)-48));
+                            last = last.concat(String.valueOf(x));
+                        }
+                        else {
+                            int x = (Integer.valueOf(seatInitial.charAt(n)-48)|Integer.valueOf(seatInfo.charAt(n)-48));
+                            last = last.concat(String.valueOf(x));
+                        }
                     }
                     seatInitial = last;
+                 //   System.out.println(seatInitial);
                 }
                 String seatInfoFirst = seatInitial.substring(0,seatFirst);
                 String seatInfoSecond = seatInitial.substring(seatFirst,seatFirst+seatSecond);
                 int seatFirstRemain  = 0;
                 int seatSecondRemain  = 0;
+               // System.out.println(seatInfoFirst);
+               // System.out.println(seatInfoSecond);
                 for(int i = 0;i<seatFirst;++i){
                     if((seatInfoFirst.charAt(i)) == '0'){
                         seatFirstRemain += 1;
