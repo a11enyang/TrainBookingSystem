@@ -4,7 +4,6 @@
  * 处理管理端的各类数据请求
  */
 package com.bupt.trainbookingsystem.controller.restController;
-import com.bupt.trainbookingsystem.entity.AdministratorEntity;
 import com.bupt.trainbookingsystem.entity.AdvertisementEntity;
 import com.bupt.trainbookingsystem.entity.OrdinaryUserEntity;
 import com.bupt.trainbookingsystem.entity.TicketManagerEntity;
@@ -12,12 +11,8 @@ import com.bupt.trainbookingsystem.service.AdministratorService;
 import com.bupt.trainbookingsystem.service.AdvertisementService;
 import com.bupt.trainbookingsystem.service.OrdinaryUserService;
 import com.bupt.trainbookingsystem.service.TicketManagerService;
-import com.bupt.trainbookingsystem.vo.Accept;
-import com.bupt.trainbookingsystem.vo.Meta;
-import com.bupt.trainbookingsystem.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,25 +37,6 @@ public class ManagerCenterRestController {
 
     @Autowired
     private AdministratorService administratorService;
-
-    //根据账号密码查找管理员是否存在
-//    @PostMapping("/login")
-//    public Result findManager(@RequestBody Accept accept){
-//        System.out.println(accept.getUsername());
-//        AdministratorEntity manager = administratorService.findAdtorByNameAndPwd());
-//        Result result = new Result();
-//        Meta meta = new Meta();
-//        if (StringUtils.isEmpty(manager)){
-//            meta.setMsg("用户名或者密码错误");
-//            meta.setStatus(100);
-//            result.setMeta(meta);
-//            return result;
-//        }
-//        meta.setStatus(200);
-//        meta.setMsg("登录成功");
-//        result.setMeta(meta);
-//        return result;
-//    }
 
 
     SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd/");
