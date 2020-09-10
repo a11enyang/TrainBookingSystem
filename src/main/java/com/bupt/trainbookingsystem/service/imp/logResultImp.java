@@ -1,9 +1,8 @@
 package com.bupt.trainbookingsystem.service.imp;
 
 import com.bupt.trainbookingsystem.dao.LogResultRepository;
-import com.bupt.trainbookingsystem.entity.LogResultEntity;
+import com.bupt.trainbookingsystem.entity.logResult.LogResultEntity;
 import com.bupt.trainbookingsystem.service.LogResultService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

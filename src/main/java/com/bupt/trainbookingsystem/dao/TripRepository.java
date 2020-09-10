@@ -28,6 +28,7 @@ public interface TripRepository extends JpaRepository<TripEntity,Integer> {
     //根据状态搜索
     List<TripEntity> findTripEntitiesByTripStatus(Byte status);
     //根据编号搜索
+    //@Query(value="SELECT * FROM booking.trip where train_number like %?1%",nativeQuery=true)
     List<TripEntity> findTripEntitiesByTrainNumberContaining(String number);
     //根据ID删除
     void deleteTripEntityById(int id);

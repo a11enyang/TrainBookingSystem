@@ -415,6 +415,11 @@ public class PCenterController {
     @PostMapping("buyticket/createorder")
     @ResponseBody
     public void createorder(@RequestBody Map<String,Object> data, HttpSession session){
+        String start=(String)data.get("start");
+        String end=(String)data.get("end");
+        String tripid=(String)data.get("tripid");
+        TripEntity tripEntity = tripService.findTripEntityById(Integer.parseInt(tripid));
+        userOrderService.addOrderLog(start,end,tripEntity.getTrainNumber());
         String json1 = JSON.toJSONString(data);
         OrdinaryUserEntity user=(OrdinaryUserEntity)session.getAttribute("user");
         String json2 = new JSONObject().toJSONString(user.getId());
@@ -612,7 +617,7 @@ public class PCenterController {
         String tripTime = String.valueOf(stationsService.getStationTimeByTripIdAndStation(routelist[0],tripid));
         String nowTime = df.format(new Date());
         boolean flag = isDateBefore(tripTime, nowTime);
-        userOrderService.addReturnLog(userOrderEntity.getTripId());
+        userOrderService.addReturnLog(routelist[0],routelist[routelist.length-1],userOrderEntity.getTripNumber());
         if (flag == true) {
             model.addAttribute("ticketinfo","票已过期");
         }

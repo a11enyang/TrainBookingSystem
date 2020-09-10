@@ -105,7 +105,7 @@ public class UserOrderServiceImp implements UserOrderService {
     }
     @Operation(value = "退票",level = 5,operationUnit = OperationUnit.USER,operationType = OperationType.INSERT)
     @Override
-    public void addReturnLog(int tripId) {
+    public void addReturnLog(String start,String end, String tripName) {
     }
 
    // @Operation(value = "查看订单",level = 3,operationUnit = OperationUnit.USER,operationType = OperationType.SELETE)

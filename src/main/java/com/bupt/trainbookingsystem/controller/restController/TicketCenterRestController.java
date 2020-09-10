@@ -3,7 +3,10 @@
  * 内容：售票端的数据请求处理
  */
 package com.bupt.trainbookingsystem.controller.restController;
+import com.bupt.trainbookingsystem.dao.TripWorstRepository;
 import com.bupt.trainbookingsystem.entity.*;
+import com.bupt.trainbookingsystem.entity.logResult.TripBestEntity;
+import com.bupt.trainbookingsystem.entity.logResult.TripWorstEntity;
 import com.bupt.trainbookingsystem.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,8 +23,8 @@ import java.util.*;
 @RequestMapping("/api/ticketCenter")
 @CrossOrigin
 public class TicketCenterRestController {
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    public final TripBestService tripBestService;
+    private final StringRedisTemplate stringRedisTemplate;
     public final StationsService stationsService;
     public final RoutelineService routelineService;
     public final TicketManagerService ticketManagerService;
@@ -30,9 +33,12 @@ public class TicketCenterRestController {
     public final TripService tripService;
     public final FareService fareService;
     public final SeatService seatService;
-    public TicketCenterRestController(TicketManagerService ticketManagerService, UserOrderService userOrderService,
+    public final TripWorstService tripWorstService;
+    public TicketCenterRestController(TripBestService tripBestService, TicketManagerService ticketManagerService, UserOrderService userOrderService,
                                       TrainService trainService, TripService tripService,
-                                      RoutelineService routelineService, StationsService stationsService, FareService fareService, SeatService seatService) {
+                                      RoutelineService routelineService, StationsService stationsService,
+                                      FareService fareService, SeatService seatService, StringRedisTemplate stringRedisTemplate, TripWorstService tripWorstService) {
+        this.tripBestService = tripBestService;
         this.ticketManagerService = ticketManagerService;
         this.userOrderService = userOrderService;
         this.trainService = trainService;
@@ -41,6 +47,8 @@ public class TicketCenterRestController {
         this.stationsService = stationsService;
         this.fareService = fareService;
         this.seatService = seatService;
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.tripWorstService = tripWorstService;
     }
     @ApiIgnore
     @RequestMapping("cleanRedis")
@@ -96,6 +104,17 @@ public class TicketCenterRestController {
         return  userOrderService.findAll();
     }
 
+    //获取订单
+    @ApiOperation("查看订单车次")
+    @GetMapping("/getBestTrips")
+    public List<TripBestEntity> getBestTrips(){
+       return tripBestService.findAll();
+    }
+    @ApiOperation("查看退订改签车次")
+    @GetMapping("/getWorstTrips")
+    public List<TripWorstEntity> getWorstTrips(){
+        return tripWorstService.findAll();
+    }
     //获取订单 非缓存
     @ApiOperation("查看订单非缓存")
     @GetMapping("/userOrdersNew")
@@ -198,6 +217,7 @@ public class TicketCenterRestController {
     @ApiOperation("按照编号搜索车次")
     @PostMapping("/searchTripsByNumber")
             List<TripEntity> searchTripsByNumber(@RequestParam(value = "number",required = false)String number){
+        System.out.println(tripService.findTripEntitiesByTrainNumberContaining(number));
         return  tripService.findTripEntitiesByTrainNumberContaining(number);
     }
     //状态搜索车次

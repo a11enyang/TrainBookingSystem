@@ -1,4 +1,4 @@
-package com.bupt.trainbookingsystem.entity;
+package com.bupt.trainbookingsystem.entity.logResult;
 
 import javax.persistence.*;
 import java.util.Objects;

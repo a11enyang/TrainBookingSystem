@@ -340,7 +340,7 @@ public class Changeticket {
         String nowTime = df.format(new Date());
         boolean flag = isDateBefore(tripTime, nowTime);
         //退票日志
-        userOrderService.addReturnLog(userOrderEntity.getTripId());
+        userOrderService.addReturnLog(routelist[0],routelist[routelist.length-1],userOrderEntity.getTripNumber());
         if (flag == true) {
             return "票已过期";
         }

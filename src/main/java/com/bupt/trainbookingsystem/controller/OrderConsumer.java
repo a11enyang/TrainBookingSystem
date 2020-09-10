@@ -250,7 +250,6 @@ public class OrderConsumer {
                 map.put("status",0);
                 userOrderEntity.setUserOrderCondition("-1");
             }
-            userOrderService.addOrderLog(start,end,tripEntity.getTrainNumber());
             userOrderEntity.setTripId(tripEntity.getId());
             userOrderEntity.setPrice(price);
             userOrderEntity.setOrdineryUserId(user.getId());

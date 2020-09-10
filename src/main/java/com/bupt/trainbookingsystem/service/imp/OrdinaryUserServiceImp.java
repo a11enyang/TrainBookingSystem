@@ -57,6 +57,7 @@ public class OrdinaryUserServiceImp implements OrdinaryUserService {
     }
 
     @Override
+    @Operation(value ="注册" ,level = 4,operationType = OperationType.INSERT,operationUnit = OperationUnit.USER)
     public void createOrdinaryUserEntity(OrdinaryUserEntity userEntity){
         ordinaryUserRepository.save(userEntity);
     }

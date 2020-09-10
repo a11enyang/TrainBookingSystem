@@ -93,7 +93,8 @@ public class SysLogAspect {
         operationLog.setArgs(JSON.toJSONString(joinPoint.getArgs()));
         //operationLog.setReturnvalue(JSON.toJSONString(ret));
         operationLog.setClientip(ip);
-        operationLog.setUsername(user.getName());
+        if(user!=null){
+        operationLog.setUsername(user.getName());}
         Operation annotation=signature.getMethod().getAnnotation(Operation.class);
         if(annotation!=null){
             operationLog.setLevel(annotation.level());
