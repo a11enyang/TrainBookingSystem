@@ -420,6 +420,7 @@ public class PCenterController {
         String json2 = new JSONObject().toJSONString(user.getId());
         String json3=json1.concat("+").concat(json2);
         jmsMessagingTemplate.convertAndSend(queue1,json3);
+
     }
 
     @GetMapping("/api/gettrip")
@@ -611,6 +612,7 @@ public class PCenterController {
         String tripTime = String.valueOf(stationsService.getStationTimeByTripIdAndStation(routelist[0],tripid));
         String nowTime = df.format(new Date());
         boolean flag = isDateBefore(tripTime, nowTime);
+        userOrderService.addReturnLog(userOrderEntity.getTripId());
         if (flag == true) {
             model.addAttribute("ticketinfo","票已过期");
         }

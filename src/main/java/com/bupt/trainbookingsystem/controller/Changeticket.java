@@ -120,7 +120,7 @@ public class Changeticket {
         String str=(String)data.get("peoplelist");
         String orderid=(String)data.get("orderid");
         List<Selectcontactor> selectcontactor= JSONObject.parseArray(str,Selectcontactor.class);
-
+       // userOrderService.addReturnLog(Integer.parseInt(tripid));
         OrdinaryUserEntity user=(OrdinaryUserEntity)session.getAttribute("user");
         TripEntity tripEntity=tripService.findTripEntityById(Integer.parseInt(tripid));
         String namelist="",seatlist="",myroute="",pricelist="",typelist="",seatNumList="";
@@ -171,6 +171,11 @@ public class Changeticket {
                 }
             }
             returnticket(Integer.parseInt(orderid));
+            //改签订单日志
+            userOrderService.addUpdateLog(start,end,tripEntity.getTrainNumber());
+            //改签订单日志
+            userOrderService.addOrderLog(start,end,tripEntity.getTrainNumber());
+//            userOrderService.addReturnLog(userOrderEntity.getTripId());
             userOrderEntity.setUserOrderCondition("1");
             userOrderEntity.setTripId(tripEntity.getId());
             userOrderEntity.setPrice(price);
@@ -184,6 +189,7 @@ public class Changeticket {
             userOrderEntity.setTypelist(typelist);
             userOrderEntity.setSeatNumberList(seatNumList);
             userOrderService.save(userOrderEntity);
+
         }
 
         return "success";
@@ -333,7 +339,8 @@ public class Changeticket {
         String tripTime = String.valueOf(stationsService.getStationTimeByTripIdAndStation(routelist[0],tripid));
         String nowTime = df.format(new Date());
         boolean flag = isDateBefore(tripTime, nowTime);
-
+        //退票日志
+        userOrderService.addReturnLog(userOrderEntity.getTripId());
         if (flag == true) {
             return "票已过期";
         }

@@ -167,6 +167,7 @@ public class OrderConsumer {
     @JmsListener(destination = "ActiveMQQueue")
     @SendTo("RQueue")
     public Map<String, Object> readActiveQueue(String message){
+        System.out.println("进入消息队列");
         String[] msg=message.split("\\+");
         JSONObject jsonObject = JSONObject.parseObject(msg[0]);
         Map<String,Object> data = (Map<String, Object>)jsonObject;
@@ -243,11 +244,13 @@ public class OrderConsumer {
             if (isOk == true){
                 userOrderEntity.setUserOrderCondition("0");
                 map.put("status",1);
+
             }
             else{
                 map.put("status",0);
                 userOrderEntity.setUserOrderCondition("-1");
             }
+            userOrderService.addOrderLog(start,end,tripEntity.getTrainNumber());
             userOrderEntity.setTripId(tripEntity.getId());
             userOrderEntity.setPrice(price);
             userOrderEntity.setOrdineryUserId(user.getId());

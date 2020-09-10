@@ -31,8 +31,12 @@ public interface UserOrderService {
 
     void updateUserOrderEntityById(String condition, int id);
 
-
-
+    //写入生成订单日志
+    void addOrderLog(String start,String end, String tripName);
+    //写入退票日志
+    void addReturnLog(int tripId);
+    //写入改签
+    void addUpdateLog(String start, String end, String tripName);
     //根据状态查找订单
     List<Userorder_search> order_paystate(int id, String state);
 

@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -57,14 +58,26 @@ public class SysLogAspect {
 
 
     public void SysLog(JoinPoint joinPoint,Object ret,long time){
-        //获取请求ip
-        ServletRequestAttributes attributes=(ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request=attributes.getRequest();
-        String ip= IPUtil.getClientIp(request);
+//        //获取请求ip
+//        ServletRequestAttributes attributes=(ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
+//        HttpServletRequest request=attributes.getRequest();
+//        String ip= IPUtil.getClientIp(request);
+//
+//        //获取用户
+//        HttpSession session=attributes.getRequest().getSession(true);
+//        OrdinaryUserEntity user=(OrdinaryUserEntity) session.getAttribute("user");
 
-        //获取用户
-        HttpSession session=attributes.getRequest().getSession(true);
-        OrdinaryUserEntity user=(OrdinaryUserEntity) session.getAttribute("user");
+        String ip="";
+        OrdinaryUserEntity user=new OrdinaryUserEntity();
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        if (RequestContextHolder.getRequestAttributes() != null) {
+            HttpServletRequest request = ((ServletRequestAttributes) attributes).getRequest();
+            ip= IPUtil.getClientIp(request);
+
+            //获取用户
+            HttpSession session=request.getSession(true);
+            user=(OrdinaryUserEntity) session.getAttribute("user");
+        }
 
 
 

@@ -30,7 +30,7 @@ public class UserOrderServiceImp implements UserOrderService {
 
     private final UserOrderRepository uor;
 
-    @Operation(value = "查看订单",level = 2,operationUnit = OperationUnit.USER,operationType = OperationType.SELETE)
+ //   @Operation(value = "查看订单",level = 2,operationUnit = OperationUnit.USER,operationType = OperationType.SELETE)
     @Override
     public List<UserOrderEntity> orderstate_get(int id, String state) {
         return userOrderRepository.orderstate_get(id,state);
@@ -39,7 +39,7 @@ public class UserOrderServiceImp implements UserOrderService {
     public UserOrderServiceImp(UserOrderRepository uor) {
         this.uor = uor;
     }
-    @Operation(value = "生成订单",level = 2,operationUnit = OperationUnit.USER,operationType = OperationType.INSERT)
+
     @Override
     public void save(UserOrderEntity u) {
         uor.save(u);
@@ -94,8 +94,21 @@ public class UserOrderServiceImp implements UserOrderService {
         userOrderRepository.updateUserOrderEntityById(condition, id);
 
     }
+    @Operation(value = "生成订单",level = 5,operationUnit = OperationUnit.USER,operationType = OperationType.INSERT)
+    @Override
+    public void addOrderLog(String start, String end, String tripName) {
+    }
 
-    @Operation(value = "查看订单",level = 3,operationUnit = OperationUnit.USER,operationType = OperationType.SELETE)
+    @Operation(value = "改签订单",level = 5,operationUnit = OperationUnit.USER,operationType = OperationType.INSERT)
+    @Override
+    public void addUpdateLog(String start, String end, String tripName) {
+    }
+    @Operation(value = "退票",level = 5,operationUnit = OperationUnit.USER,operationType = OperationType.INSERT)
+    @Override
+    public void addReturnLog(int tripId) {
+    }
+
+   // @Operation(value = "查看订单",level = 3,operationUnit = OperationUnit.USER,operationType = OperationType.SELETE)
     @Override
     public List<Userorder_search> order_paystate(int id, String state) {
        List<Object[]> users= userOrderRepository.notpayorder(id,state);
