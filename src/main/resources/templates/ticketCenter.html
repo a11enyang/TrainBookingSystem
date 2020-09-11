@@ -1451,9 +1451,9 @@
                 editFare:function(fare){
                     let param = new URLSearchParams();
                     let myId = fare.id;
-                    let regPos = /^\d+(\.\d+)?$/; //非负浮点数
-                    let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-                    if(regPos.test(document.getElementById(myId).value) || regNeg.test(document.getElementById(myId).value)){
+                    // let regPos = /^\d+(\.\d+)?$/; //非负浮点数
+                    // let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-regPos.test(document.getElementById(myId).value) || regNeg.test(document.getElementById(myId).value)9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+                    if(1){
                         param.append("id",myId);
                         param.append("price",document.getElementById(myId).value);
                         axios.post("http://localhost:8080/api/ticketCenter/editFare",param)
@@ -1481,9 +1481,9 @@
                 },
                 newFare:
                     function(){
-                        let regPos = /^\d+(\.\d+)?$/; //非负浮点数
-                        let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-                        if(regPos.test(document.getElementById("newPrice").value) || regNeg.test(document.getElementById("newPrice").value)){
+                        // let regPos = /^\d+(\.\d+)?$/; //非负浮点数regPos.test(document.getElementById("newPrice").value) || regNeg.test(document.getElementById("newPrice").value)
+                        // let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+                        if(1){
                         let param = new URLSearchParams();
                         param.append("id",this.edit_fare_trip_id);
                         param.append("start",document.getElementById("newStartStation").value);

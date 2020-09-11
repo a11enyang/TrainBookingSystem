@@ -38,13 +38,13 @@ public class StationsServiceImp implements StationsService {
     }
 
     @Override
-    @Cacheable(value="Station",key = "#id")
+   // @Cacheable(value="Station",key = "#id")
     public List<StationsEntity> findStationsEntitiesByTripId(int id) {
         return stationsRepository.findStationsEntitiesByTripId(id);
     }
 
     @Override
-    @CachePut(value="Station",key="#result[0].tripId")
+   // @CachePut(value="Station",key="#result[0].tripId")
     public List<StationsEntity> updateStationEntityById(Timestamp arrive_time, int id) {
         stationsRepository.updateRoutelineEntityById(arrive_time, id);
         int tripId = stationsRepository.findStationsEntityById(id).getTripId();
@@ -52,7 +52,7 @@ public class StationsServiceImp implements StationsService {
     }
 
     @Override
-    @CacheEvict(value="Station",key="#result.id")
+   // @CacheEvict(value="Station",key="#result.id")
     public TripEntity deleteStationsEntityById(int id) {
         TripEntity T = tpr.findTripEntityById(stationsRepository.findStationsEntityById(id).getTripId());
         stationsRepository.deleteStationsEntityById(id);
@@ -60,7 +60,7 @@ public class StationsServiceImp implements StationsService {
     }
 
     @Override
-    @Cacheable(value="Station1",key = "#start+'-'+#id")
+  //  @Cacheable(value="Station1",key = "#start+'-'+#id")
     public Timestamp getStationTimeByTripIdAndStation(String start, int tripId) {
         return stationsRepository.getStationTimeByTripIdAndStation(start, tripId);
     }
