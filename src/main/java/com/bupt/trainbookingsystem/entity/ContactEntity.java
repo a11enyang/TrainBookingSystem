@@ -21,7 +21,7 @@ public class ContactEntity implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)  // 自增
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // 自增
     public int getId() {
         return id;
     }
