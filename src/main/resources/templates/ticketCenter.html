@@ -822,7 +822,7 @@
             },
             mounted() {
                 this.getBestTrips();
-                this.timer = setInterval(this.getBestTrips, 1000*60*10);
+                this.timer = setInterval(this.getBestTrips, 1000*60*120);
             },
             beforeDestroy() {
                  clearInterval(this.timer);
@@ -880,7 +880,8 @@
                 }
             },
             mounted() {
-                this.timer = setInterval(this.getWorstTrips, 1000*60*10);
+                this.getWorstTrips();
+                this.timer = setInterval(this.getWorstTrips, 1000*60*120);
             },
             beforeDestroy() {
                  clearInterval(this.timer);

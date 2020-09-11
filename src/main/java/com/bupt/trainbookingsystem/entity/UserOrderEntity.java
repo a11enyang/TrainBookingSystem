@@ -29,7 +29,7 @@ public class UserOrderEntity implements Serializable {
     private String seatNumberList;
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // 自增
+    @GeneratedValue(strategy = GenerationType.AUTO)// 自增
     public int getId() {
         return id;
     }
